@@ -24,4 +24,12 @@ threejs.get('/tinyhouse', (req, res) => {
   res.sendFile(path.join(__dirname+'/../../templates/threejs/house/house.html'));
 });
 
+threejs.get('/human', (req, res) => {
+  res.sendFile(path.join(__dirname+'/../../templates/threejs/human/human.html'));
+});
+
+threejs.get('/car', (req, res) => {
+  res.sendFile(path.join(__dirname+'/../../templates/threejs/car/car.html'));
+});
+
 module.exports = threejs;
