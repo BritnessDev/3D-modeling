@@ -5,6 +5,8 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.124/build/three.module.js'; 
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/controls/OrbitControls.js'; 
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/loaders/GLTFLoader.js'; 
+import Stats from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/libs/stats.module.js';
+
 function init() {
   var scene = new THREE.Scene();
   scene.background = new THREE.Color('skyblue');
@@ -51,6 +53,10 @@ function init() {
     },
     false
   )
+
+  
+  const stats = Stats()
+  document.body.appendChild(stats.dom)
 
   var renderer = new THREE.WebGLRenderer();
   
