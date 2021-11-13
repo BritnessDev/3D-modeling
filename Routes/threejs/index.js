@@ -1,5 +1,6 @@
 const threejs = require('express').Router();
 const path = require('path');
+const express = require('express')
 
 // const findObject = require('../../utils/findObject');
 
@@ -8,12 +9,19 @@ const path = require('path');
 // threejs.use('/:modelId/cars', cars);
 
 // threejs.get('/:modelId', single);
+
+console.log("routes/threejs/index.js : "+__dirname);
+
 threejs.get('/', (req, res) => {
   res.sendFile(path.join(__dirname+'/../../templates/threejs/index.html'));
 });
 
-// routes.get('/', function(req, res) {
-//   res.sendFile(path.join(__dirname+'/../templates/index.html'));
-// });
+threejs.get('/simple_cube', (req, res) => {
+  res.sendFile(path.join(__dirname+'/../../templates/threejs/simple_cube/simple_cube.html'));
+});
+
+threejs.get('/tinyhouse', (req, res) => {
+  res.sendFile(path.join(__dirname+'/../../templates/threejs/house/house.html'));
+});
 
 module.exports = threejs;
