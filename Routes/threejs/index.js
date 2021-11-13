@@ -32,4 +32,8 @@ threejs.get('/car', (req, res) => {
   res.sendFile(path.join(__dirname+'/../../templates/threejs/car/car.html'));
 });
 
+threejs.get('/modelcontrol', (req, res) => {
+  res.sendFile(path.join(__dirname+'/../../templates/threejs/model_control/modelcontrol.html'));
+});
+
 module.exports = threejs;

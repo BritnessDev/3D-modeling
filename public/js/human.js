@@ -40,6 +40,16 @@ function init() {
   scene.add( sphere );
   sphere.position.set(-40, 20, -30)
 
+  window.addEventListener(
+    'resize',
+    () => {
+        camera.aspect = window.innerWidth / window.innerHeight
+        camera.updateProjectionMatrix()
+        renderer.setSize(window.innerWidth, window.innerHeight)
+        render()
+    },
+    false
+  )
   
   let loader = new GLTFLoader();
   loader.load('/models/human/male_business_model/scene.gltf', function(gltf){

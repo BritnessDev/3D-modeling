@@ -11,8 +11,8 @@ function init() {
 
   var camera = new THREE.PerspectiveCamera( 100, window.innerWidth/window.innerHeight, 1, 1000 );
   // transform objects
-  camera.position.set(0,5,20);
-  camera.lookAt(new THREE.Vector3(0, 20, 0));
+  camera.position.set(0,15,20);
+  camera.lookAt(new THREE.Vector3(0, 0, 0));
 
   //Create a PointLight and turn on shadows for the light
   const light = new THREE.PointLight( 0xffffff, 5, 1000, 2 );
@@ -31,6 +31,16 @@ function init() {
   light.shadow.camera.near = 0.5; // default
   light.shadow.camera.far = 500; // default
   
+  let loader = new GLTFLoader();
+  loader.load('/models/cars/fenyr_super_sport/scene.gltf', function(gltf){
+    let car=gltf.scene.children[0];        
+    car.scale.set(0.2,0.2,0.2);
+    scene.add(gltf.scene);
+    car.position.set(-10, 0, 0);
+  }, undefined, function ( error ) {
+    console.error( error );
+  });  
+    
   window.addEventListener(
     'resize',
     () => {
@@ -41,17 +51,7 @@ function init() {
     },
     false
   )
-  
-  let loader = new GLTFLoader();
-  loader.load('/models/cars/fenyr_super_sport/scene.gltf', function(gltf){
-    let car=gltf.scene.children[0];        
-    car.scale.set(0.1,0.1,0.1);
-    scene.add(gltf.scene);
-    // car.position.set(-5, 0, 0);
-  }, undefined, function ( error ) {
-    console.error( error );
-  });  
-    
+
   var renderer = new THREE.WebGLRenderer();
   
   var controls = new OrbitControls(camera, renderer.domElement);
