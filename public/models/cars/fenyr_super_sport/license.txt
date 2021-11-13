@@ -1,0 +1,11 @@
+Model Information:
+* title:	Fenyr Super Sport
+* source:	https://sketchfab.com/3d-models/fenyr-super-sport-3eef554c8ca342c98af4b6993b713354
+* author:	DJS (https://sketchfab.com/s.jailen.jones)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Fenyr Super Sport" (https://sketchfab.com/3d-models/fenyr-super-sport-3eef554c8ca342c98af4b6993b713354) by DJS (https://sketchfab.com/s.jailen.jones) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
