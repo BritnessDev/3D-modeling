@@ -7,32 +7,41 @@ import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/loaders/GLTFLoader.js'; 
 import Stats from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/libs/stats.module.js';
 import { GUI } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/libs/dat.gui.module.js';
+
 var scene, camera, renderer
+var stats
 var car_model;
 var global_gui;
-var camX=0, camY=-50, camZ=50;
-var carX=-30, carY=-40, carZ=0, carRotate = 0, carScale = 0.3;
+var car_set = {};
+var camera_set = {};
+car_set.px = 0;car_set.py = 0;car_set.pz = 0;car_set.scale = 0.3;
+camera_set.cx = car_set.px;camera_set.cy = car_set.py;camera_set.cz = car_set.pz;
+camera_set.px = car_set.px;camera_set.py = car_set.py+300;camera_set.pz = car_set.pz + 300;
+var carlight, spherelight, carlight_target, light;
+
+
 var options = {
-  carX: -30,
-  carY: -40,
+  carX: 0,
+  carY: 0,
   carRotate: 0,
   camX: 0,
-  camY: -50,
-  camZ: 50,
+  camY: 0,
+  camZ: 0,
   camera_control : false,
   camera: {
     speed: 0.0001
   },
   reset: function() {
-    this.carX = -30;
-    this.carY = -40;
+    this.carX = car_set.px;
+    this.carY = car_set.py;
     this.carRotate = 0;
-    this.camX = 0;
-    this.camY = -50;
-    this.camZ = 50;        
+    this.camX = camera_set.px;
+    this.camY = camera_set.py;
+    this.camZ = camera_set.pz;        
     this.camera_control = false;
-    car_model.position.set(carX, carY, carZ);
-    camera.position.set(camX, camY, camZ);
+    car_model.position.set(car_set.px,car_set.py, car_set.pz);
+    camera.position.set(camera_set.px, camera_set.py, camera_set.pz);    
+    camera.lookAt(new THREE.Vector3(camera_set.cx, camera_set.cy, camera_set.cz));
   }
 };
 
@@ -42,14 +51,14 @@ function create_scene() {
 }
 
 function create_camera() {
-  camera = new THREE.PerspectiveCamera( 100, window.innerWidth/window.innerHeight, 1, 1000 );  
-  camera.position.set(camX, camY, camZ);
-  camera.lookAt(new THREE.Vector3(0, 0, 0));
+  camera = new THREE.PerspectiveCamera( 300, window.innerWidth/window.innerHeight, 1, 1000 );  
+  camera.position.set(camera_set.px, camera_set.py, camera_set.pz);  
+  camera.lookAt(new THREE.Vector3(camera_set.cx, camera_set.cy, camera_set.cz));
   //add gui of camera
   let cameraFolder = global_gui.addFolder('Camera')
-  cameraFolder.add(camera.position, 'x', -100, 100).listen();
-  cameraFolder.add(camera.position, 'y', -100, 100).listen();
-  cameraFolder.add(camera.position, 'z', -100, 100).listen();
+  cameraFolder.add(camera.position, 'x', -1000, 1000).listen();
+  cameraFolder.add(camera.position, 'y', -1000, 1000).listen();
+  cameraFolder.add(camera.position, 'z', -200, 200).listen();
   cameraFolder.open()
 }
 
@@ -82,29 +91,35 @@ function create_ground(w, h) {
 }
 
 function create_light() {
-  const light = new THREE.PointLight( 0xffffff, 1, 1000, 1 );
-  light.position.set( -200, 200, 300 );
+  light = new THREE.PointLight( 0xffffff, 1, 200, 1 );
+  // light.position.set( -200, 200, 200 );
   light.castShadow = true; // default false
   scene.add( light );
+  
+  const geometry = new THREE.SphereGeometry( 1, 32, 16 );
+  const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+  spherelight = new THREE.Mesh( geometry, material );
+  scene.add( spherelight );
+  carlight = new THREE.SpotLight( 0xffffff, 2, 150, 0.40 );
+  scene.add(carlight);
+  carlight_target = new THREE.Object3D();
+  scene.add(carlight_target);  
+  carlight.target = carlight_target;
 
-  const light1 = new THREE.PointLight( 0xffffff, 1, 1000, 1 );
-  light1.position.set( 200, -200, 300 );
-  light1.castShadow = true; // default false
-  scene.add( light1 );
 }
 
 function import_model(name,url) {  
   let loader = new GLTFLoader();
   loader.load(url, function(model_gltf){
     car_model=model_gltf.scene.children[0];      
-    car_model.scale.set(carScale,carScale,carScale);
+    car_model.scale.set(car_set.scale, car_set.scale, car_set.scale);
     scene.add(model_gltf.scene);
     car_model.rotateX(Math.PI/2);
-    car_model.position.set(carX, carY, carZ); 
+    car_model.position.set(car_set.px, car_set.py, car_set.pz); 
     //add gui of car
     let car_modelFolder = global_gui.addFolder(name)
-    car_modelFolder.add(car_model.position, 'x', -100, 100).listen();
-    car_modelFolder.add(car_model.position, 'y', -100, 100).listen();
+    car_modelFolder.add(car_model.position, 'x', -1000, 1000).listen();
+    car_modelFolder.add(car_model.position, 'y', -1000, 1000).listen();
     car_modelFolder.add(options,'carRotate', -3.141592, 3.141592).name('rotate').listen();
     car_modelFolder.open()
     
@@ -121,15 +136,6 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight)
 }
 
-// function create_gui() {
-//   let gui = new GUI;
-  
-//   global_gui = gui.addFolder('Controls');
-//   global_gui.add(options, 'Camera');
-//   global_gui.add(options, 'Car');
-//   global_gui.open();
-// }
-
 function init() {  
   global_gui = new GUI();
   create_scene();
@@ -140,7 +146,7 @@ function init() {
   create_light();
   import_model('Car', '/models/cars/fenyr_super_sport/scene.gltf');//importing model of car
   //Add stats
-  const stats = Stats()
+  stats = Stats();
   document.body.appendChild(stats.dom)
   // add control of camera
   var cameral_control = new OrbitControls(camera, renderer.domElement);
@@ -150,19 +156,23 @@ function init() {
   
   scene_rendering();
 }
-// function animate() {
-//   requestAnimationFrame(animate)
-//   cube.rotation.x += 0.01
-//   cube.rotation.y += 0.01
-//   controls.update()
-//   render()
-//   stats.update()
-// }
 
 function scene_rendering() {
 	requestAnimationFrame( scene_rendering );
+  car_model.position.y -= 2;
+  if(car_model.position.y<-1000){
+    car_model.position.y=1000;
+  }  
+  camera.rotation.x=Math.PI;
+  camera.position.set(car_model.position.x, car_model.position.y+200, car_model.position.z+200);
+  camera.lookAt(new THREE.Vector3(car_model.position.x, car_model.position.y, car_model.position.z));
+  light.position.set(car_model.position.x+13, car_model.position.y+30, car_model.position.z+100);
+  carlight.position.set(car_model.position.x+13, car_model.position.y+3, car_model.position.z+5);
+  spherelight.position.set(car_model.position.x+13, car_model.position.y+3, car_model.position.z+5);
+  carlight_target.position.set(car_model.position.x+13, car_model.position.y-100, car_model.position.z+5);
+  // camera.rotation.z +=0.01;
 	renderer.render( scene, camera );
-  
+  stats.update()
 }
 
 init();
