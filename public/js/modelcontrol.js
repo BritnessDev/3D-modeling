@@ -67,7 +67,7 @@ function create_scene() {
 function create_camera() {
   // camera = new THREE.PerspectiveCamera( 10000, window.innerWidth/window.innerHeight, 1, 1000 );  
   camera = new THREE.PerspectiveCamera( 20, window.innerWidth / window.innerHeight, 1, 10000 );
-  camera.position.set(0, car_set.py-300, car_set.pz+300);  
+  camera.position.set(0, car_set.py-800, car_set.pz+800);  
   // camera.rotateX(-Math.PI);
   // camera.rotateY(-Math.PI);
   // camera.lookAt(new THREE.Vector3(0, car_set.py, car_set.pz));
@@ -124,14 +124,14 @@ function create_light() {
   var car_target1 = new THREE.Object3D();
   var car_target2=  new THREE.Object3D();  
   
-  pointlight1.position.set(car_set.px+26, car_set.py+6, car_set.pz+7)
+  pointlight1.position.set(car_set.px+26, car_set.py+36, car_set.pz+20)
   carlight1.position.set(0,0,0);  
   car_target1.position.set(0,-20,0);
   carlight1.target = car_target1;
   pointlight1.add(carlight1);
   pointlight1.add(car_target1);  
   
-  pointlight2.position.set(car_set.px+88, car_set.py+6, car_set.pz+7)
+  pointlight2.position.set(car_set.px+88, car_set.py+36, car_set.pz+20)
   carlight2.position.set(0,0,0);  
   car_target2.position.set(0,-20,0);    
   carlight2.target = car_target2;
@@ -180,7 +180,7 @@ function init() {
   create_camera();
   create_renderer();
   create_axes();
-  create_ground(2000, 2000);
+  create_ground(3000, 3000);
   create_light();
   import_model('Car', '/models/cars/fenyr_super_sport/scene.gltf');//importing model of car
   
@@ -200,15 +200,15 @@ function scene_rendering() {
 	requestAnimationFrame( scene_rendering );
   if(animation_flag) {        
     newPosition.x = car_model.position.x;
-    newPosition.y = car_model.position.y-0.5;
+    newPosition.y = car_model.position.y-2;
     newPosition.z = car_model.position.z;
     car_model.position.copy(newPosition);
 
     var newLookAt = new THREE.Vector3();
     newLookAt.x=car_model.position.x;
-    newLookAt.y=car_model.position.y-200;
-    newLookAt.z=car_model.position.z-200;
-    // car_model.lookAt(newPosition);
+    newLookAt.y=car_model.position.y-500;
+    newLookAt.z=car_model.position.z+500;
+    car_model.lookAt(newPosition);
 
     if(car_model.position.y<-1000){
       car_model.position.y=1000;
